@@ -38,18 +38,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 2vh 2vw;
+      padding: 0.5vh 0.5vw; /* 極小化頁面外邊距 */
     }
 
     .container {
       background-color: var(--card-bg);
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.12);
       width: 100%;
-      max-width: 800px;
-      height: 96vh;
-      max-height: 900px;
-      padding: 3vh 3vw;
+      max-width: 950px;
+      height: 99vh; /* 儘可能貼近視窗高度 */
+      max-height: 1000px;
+      padding: 2vh 2.5vw; /* 壓縮容器內邊距 */
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -63,9 +63,9 @@
       width: 100%;
       height: 100%;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      gap: 1.5vh;
+      gap: 1.5vh; /* 縮小組件間距 */
     }
 
     .page.active {
@@ -102,39 +102,40 @@
 
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
+      50% { transform: scale(1.15); }
     }
 
-    /* 基本字體與按鈕排版 */
+    /* --- 極大化標題與說明文字 --- */
     h1 {
       color: var(--primary-color);
-      font-size: clamp(1.6rem, 3.8vh, 2.6rem);
-      line-height: 1.3;
+      font-size: clamp(2.3rem, 5.5vh, 3.8rem); /* 再加大文字 */
+      line-height: 1.2;
+      font-weight: 900;
     }
 
     p {
-      font-size: clamp(1.1rem, 2.3vh, 1.5rem);
-      color: #444;
-      line-height: 1.4;
+      font-size: clamp(1.4rem, 3.2vh, 2.2rem); /* 再加大說明字體 */
+      color: #222;
+      line-height: 1.35;
     }
 
     .instruction-hint {
-      font-size: clamp(0.95rem, 2vh, 1.25rem);
+      font-size: clamp(1.2rem, 2.8vh, 1.8rem);
       color: var(--primary-color);
       font-weight: bold;
       background-color: #e6f3ff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px dashed var(--secondary-color);
+      padding: 12px 24px;
+      border-radius: 30px;
+      border: 3px dashed var(--secondary-color);
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .btn-group {
       display: flex;
       flex-direction: column;
-      gap: 1.2vh;
+      gap: 1.5vh;
       width: 100%;
     }
 
@@ -143,17 +144,17 @@
       color: white;
       border: none;
       border-radius: 20px;
-      padding: clamp(12px, 2vh, 18px) clamp(20px, 3vw, 40px);
-      font-size: clamp(1.2rem, 2.6vh, 1.7rem);
+      padding: clamp(18px, 3.2vh, 28px) clamp(24px, 3.5vw, 48px);
+      font-size: clamp(1.6rem, 3.8vh, 2.5rem); /* 極大化按鈕字體 */
       font-weight: bold;
       cursor: pointer;
       width: 100%;
       transition: background-color 0.2s, transform 0.1s;
-      box-shadow: 0 6px 15px rgba(0,136,255,0.3);
+      box-shadow: 0 8px 20px rgba(0,136,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex-shrink: 0;
     }
 
@@ -164,10 +165,10 @@
 
     .btn-retry {
       background-color: var(--accent-color);
-      box-shadow: 0 6px 15px rgba(255,152,0,0.3);
+      box-shadow: 0 8px 20px rgba(255,152,0,0.3);
     }
 
-    /* --- 答題頁面組件與 Progress Bar --- */
+    /* --- 答題頁面組件極大化 --- */
     .progress-container {
       width: 100%;
       display: flex;
@@ -178,67 +179,66 @@
 
     .progress-bar-bg {
       width: 100%;
-      height: 12px;
+      height: 18px;
       background-color: #e0e8f0;
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
     }
 
     .progress-bar-fill {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-      border-radius: 10px;
+      border-radius: 12px;
       transition: width 0.4s ease;
     }
 
     .progress {
-      font-size: clamp(1rem, 2.2vh, 1.4rem);
+      font-size: clamp(1.25rem, 2.8vh, 1.8rem);
       color: var(--primary-color);
-      font-weight: bold;
+      font-weight: 800;
     }
 
     /* 問題標籤卡 */
     .section-label {
       align-self: flex-start;
-      font-size: clamp(0.9rem, 2vh, 1.15rem);
+      font-size: clamp(1.2rem, 2.6vh, 1.6rem);
       font-weight: bold;
       color: white;
       background-color: var(--primary-color);
-      padding: 4px 14px;
-      border-radius: 12px 12px 0 0;
-      margin-bottom: -10px;
+      padding: 6px 20px;
+      border-radius: 14px 14px 0 0;
+      margin-bottom: -6px;
       margin-left: 10px;
       z-index: 1;
     }
 
     .question-box {
-      font-size: clamp(1.15rem, 2.8vh, 1.8rem);
-      font-weight: bold;
+      font-size: clamp(1.5rem, 3.8vh, 2.5rem); /* 加大題目字體 */
+      font-weight: 800;
       text-align: left;
       background: #eef6ff;
-      padding: 2vh 3vw;
-      border-radius: 16px;
-      border-left: 8px solid var(--secondary-color);
-      line-height: 1.4;
+      padding: 2vh 2.5vw;
+      border-radius: 20px;
+      border-left: 12px solid var(--secondary-color);
+      line-height: 1.35;
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+      gap: 14px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.04);
     }
 
     .options-guide {
-      font-size: clamp(0.95rem, 2vh, 1.25rem);
+      font-size: clamp(1.2rem, 2.6vh, 1.6rem);
       font-weight: bold;
-      color: #555;
+      color: #333;
       text-align: left;
       width: 100%;
-      margin-top: 0.5vh;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .options-container {
@@ -246,23 +246,26 @@
       flex-direction: column;
       gap: 1.5vh;
       width: 100%;
+      flex: 1; /* 充份填滿剩餘高度 */
+      justify-content: space-evenly;
     }
 
     .option-btn {
       background-color: #f8f9fa;
-      color: #333;
-      border: 3px solid #dcdfe6;
-      border-radius: 18px;
-      padding: clamp(12px, 2vh, 20px) 18px;
-      font-size: clamp(1.05rem, 2.4vh, 1.55rem);
-      font-weight: 600;
+      color: #111;
+      border: 4px solid #dcdfe6;
+      border-radius: 22px;
+      padding: clamp(18px, 3vh, 32px) 24px;
+      font-size: clamp(1.4rem, 3.4vh, 2.2rem); /* 加大選項字體 */
+      font-weight: 700;
       text-align: left;
       cursor: pointer;
       transition: all 0.2s;
       line-height: 1.3;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
+      flex: 1; /* 按鈕本身均分垂直高度，消除內部空隙 */
     }
 
     .option-btn:hover, .option-btn:active {
@@ -270,12 +273,12 @@
       background-color: #e6f3ff;
     }
 
-    /* --- 倒數頁面樣式 --- */
+    /* --- 倒數頁面 --- */
     .countdown-number {
-      font-size: clamp(5rem, 15vh, 9rem);
+      font-size: clamp(7rem, 24vh, 13rem);
       font-weight: 900;
       color: var(--secondary-color);
-      text-shadow: 0 8px 20px rgba(0,136,255,0.25);
+      text-shadow: 0 10px 25px rgba(0,136,255,0.3);
       animation: popIn 0.8s ease infinite alternate;
     }
 
@@ -285,21 +288,21 @@
     }
 
     .countdown-text {
-      font-size: clamp(1.3rem, 3vh, 2rem);
+      font-size: clamp(1.8rem, 4.2vh, 2.8rem);
       font-weight: bold;
       color: var(--primary-color);
     }
 
-    /* --- 結果卡片容器 --- */
+    /* --- 結果卡片極大化與填滿空間 --- */
     .result-card {
       width: 100%;
-      flex: 1;
+      flex: 1; /* 垂直方向極大化延伸 */
       display: flex;
       flex-direction: column;
       justify-content: space-evenly;
       align-items: center;
       border-radius: 24px;
-      padding: 2.5vh 3vw;
+      padding: 2.5vh 2vw;
       box-sizing: border-box;
     }
 
@@ -307,39 +310,39 @@
     .photo-certificate {
       border: 8px dashed var(--correct-color);
       background-color: #f1f8e9;
-      box-shadow: inset 0 0 20px rgba(46,125,50,0.1);
+      box-shadow: inset 0 0 25px rgba(46,125,50,0.1);
     }
 
     .photo-certificate h2 {
       color: var(--correct-color);
-      font-size: clamp(1.8rem, 3.8vh, 2.8rem);
-      line-height: 1.2;
+      font-size: clamp(2.2rem, 5vh, 3.5rem);
+      line-height: 1.15;
     }
 
     .photo-certificate .cert-text {
-      font-size: clamp(1.3rem, 3vh, 2.1rem);
-      font-weight: 800;
+      font-size: clamp(1.6rem, 4vh, 2.8rem);
+      font-weight: 900;
       color: var(--primary-color);
       background-color: #ffffff;
-      padding: 1.5vh 3vw;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 2vh 2vw;
+      border-radius: 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       width: 100%;
       line-height: 1.3;
     }
 
     /* 未滿 100% 卡片 */
     .retry-card {
-      border: 6px dashed var(--accent-color);
+      border: 8px dashed var(--accent-color);
       background-color: #fffde7;
     }
 
-    /* QR Code 容器與樣式 */
+    /* QR Code 容器極大化 */
     .qrcode-box {
       background: #ffffff;
-      padding: 12px 16px;
-      border-radius: 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 14px 18px;
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -351,15 +354,15 @@
     }
 
     .qrcode-label {
-      font-size: clamp(0.85rem, 1.7vh, 1.1rem);
-      color: #555;
+      font-size: clamp(1.1rem, 2.5vh, 1.5rem);
+      color: #333;
       font-weight: bold;
     }
 
     .photo-certificate .date-text {
-      font-size: clamp(1rem, 2.2vh, 1.5rem);
+      font-size: clamp(1.25rem, 2.8vh, 1.8rem);
       font-weight: bold;
-      color: #333;
+      color: #222;
     }
   </style>
 </head>
@@ -367,7 +370,7 @@
 
   <div class="container">
     <!-- 1. Landing Page (首頁) -->
-    <div id="landing-page" class="page active" style="justify-content: space-between;">
+    <div id="landing-page" class="page active">
       <h1 style="margin-top: auto;">
         <span class="animated-emoji anim-bounce">🤖</span>
         AI Community Promotion
@@ -395,7 +398,7 @@
     </div>
 
     <!-- 2. 答題頁面 (Quiz Page) -->
-    <div id="quiz-page" class="page" style="justify-content: space-between;">
+    <div id="quiz-page" class="page">
       <div class="progress-container">
         <div class="progress-bar-bg">
           <div class="progress-bar-fill" id="progress-bar-fill"></div>
@@ -414,15 +417,15 @@
         <span class="animated-emoji anim-wiggle">👉</span> 請選擇正確答案 / Select the correct answer:
       </div>
 
-      <!-- 選項按鈕容器 -->
+      <!-- 選項按鈕容器 (垂直延伸滿版) -->
       <div class="options-container" id="options-container">
         <!-- 選項動態生成 (1 正確 + 1 隨機錯誤) -->
       </div>
     </div>
 
     <!-- 3. 3 秒倒數頁面 -->
-    <div id="countdown-page" class="page">
-      <div class="animated-emoji anim-bounce" style="font-size: 3rem;">⏳</div>
+    <div id="countdown-page" class="page" style="justify-content: center; gap: 2vh;">
+      <div class="animated-emoji anim-bounce" style="font-size: 5rem;">⏳</div>
       <div class="countdown-text" id="countdown-label">計算成績中...</div>
       <div class="countdown-number" id="countdown-timer">3</div>
     </div>
@@ -755,7 +758,7 @@
       const qrContainer = document.getElementById(elementId);
       qrContainer.innerHTML = "";
       
-      const qrSize = Math.min(window.innerHeight * 0.16, 130);
+      const qrSize = Math.min(window.innerHeight * 0.22, 180);
       
       new QRCode(qrContainer, {
         text: targetUrl,
