@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI 社區推廣活動 - 認知小測試</title>
+  <style>
+    :root {
+      --primary-color: #005bb5;
+      --secondary-color: #0088ff;
+      --accent-color: #ff9800;
+      --bg-color: #f0f4f8;
+      --card-bg: #ffffff;
+      --text-color: #222222;
+      --correct-color: #2e7d32;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", "PingFang HK", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2vh 2vw;
+    }
+
+    .container {
+      background-color: var(--card-bg);
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      width: 100%;
+      max-width: 800px;
+      height: 94vh;
+      max-height: 900px;
+      padding: 3vh 3vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .page {
+      display: none;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    /* --- 動態 Emoji 動畫 --- */
+    .animated-emoji {
+      display: inline-block;
+      margin: 0 4px;
+    }
+
+    .anim-float { animation: float 2.5s ease-in-out infinite; }
+    .anim-bounce { animation: bounce 1.8s infinite; }
+    .anim-wiggle { animation: wiggle 2s ease-in-out infinite; }
+    .anim-pulse { animation: pulse 1.5s ease-in-out infinite; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-15px); }
+      60% { transform: translateY(-7px); }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-12deg); }
+      75% { transform: rotate(12deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* 基本字體與按鈕排版 */
+    h1 {
+      color: var(--primary-color);
+      font-size: clamp(1.8rem, 4vh, 2.8rem);
+      line-height: 1.3;
+      margin-top: auto;
+    }
+
+    p {
+      font-size: clamp(1.2rem, 2.8vh, 1.8rem);
+      color: #444;
+      line-height: 1.5;
+      margin: 2vh 0;
+    }
+
+    .btn {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: clamp(15px, 2.5vh, 25px) clamp(30px, 4vw, 50px);
+      font-size: clamp(1.3rem, 3vh, 2rem);
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: auto;
+      transition: background-color 0.2s, transform 0.1s;
+      box-shadow: 0 6px 15px rgba(0,136,255,0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      background-color: var(--primary-color);
+    }
+
+    .btn-retry {
+      background-color: var(--accent-color);
+      box-shadow: 0 6px 15px rgba(255,152,0,0.3);
+    }
+
+    /* 答題頁面組件 */
+    .progress {
+      font-size: clamp(1.1rem, 2.5vh, 1.5rem);
+      color: var(--primary-color);
+      font-weight: bold;
+      margin-top: 1vh;
+    }
+
+    .question-box {
+      font-size: clamp(1.3rem, 3.2vh, 2.1rem);
+      font-weight: bold;
+      text-align: left;
+      background: #eef6ff;
+      padding: 2.5vh 3vw;
+      border-radius: 16px;
+      border-left: 10px solid var(--secondary-color);
+      line-height: 1.4;
+      width: 100%;
+      margin: 2vh 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2vh;
+      width: 100%;
+      margin-bottom: auto;
+    }
+
+    .option-btn {
+      background-color: #f8f9fa;
+      color: #333;
+      border: 4px solid #dcdfe6;
+      border-radius: 18px;
+      padding: clamp(15px, 2.5vh, 24px) 20px;
+      font-size: clamp(1.2rem, 2.8vh, 1.7rem);
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-btn:hover, .option-btn:active {
+      border-color: var(--secondary-color);
+      background-color: #e6f3ff;
+    }
+
+    /* --- 100% 正確：打卡專用全螢幕大卡片設計 --- */
+    .photo-certificate {
+      border: 8px dashed var(--correct-color);
+      padding: 4vh 3vw;
+      border-radius: 24px;
+      background-color: #f1f8e9;
+      width: 100%;
+      height: 80%; /* 佔據絕大部分空間，方便持裝置拍照 */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2vh;
+      box-shadow: inset 0 0 20px rgba(46,125,50,0.1);
+      margin-top: 1vh;
+    }
+
+    .photo-certificate h2 {
+      color: var(--correct-color);
+      font-size: clamp(2.2rem, 5vh, 3.5rem);
+      line-height: 1.2;
+    }
+
+    .photo-certificate .cert-text {
+      font-size: clamp(1.8rem, 4vh, 2.8rem);
+      font-weight: 800;
+      color: var(--primary-color);
+      background-color: #ffffff;
+      padding: 2vh 3vw;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      width: 100%;
+      line-height: 1.4;
+    }
+
+    .photo-certificate .date-text {
+      font-size: clamp(1.3rem, 3vh, 2rem);
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 1. Landing Page (首頁) -->
+    <div id="landing-page" class="page active">
+      <h1>
+        <span class="animated-emoji anim-bounce">🤖</span>
+        AI 社區推廣活動
+        <span class="animated-emoji anim-bounce">✨</span>
+        <br>認知小測試
+      </h1>
+      <p>
+        歡迎參加！請按下面個掣開始答題<span class="animated-emoji anim-wiggle">👇</span><br>
+        睇下您對用 AI 嘅觀念了解幾多啦！
+      </p>
+      <button class="btn" onclick="startQuiz()">
+        <span class="animated-emoji anim-pulse">🚀</span> 開始測試
+      </button>
+    </div>
+
+    <!-- 2. 答題頁面 -->
+    <div id="quiz-page" class="page">
+      <div class="progress" id="progress-text">第 1 / 5 題</div>
+      <div class="question-box" id="question-text">題目載入中...</div>
+      <div class="options-container" id="options-container">
+        <!-- 選項動態生成 -->
+      </div>
+    </div>
+
+    <!-- 3. 結果頁面 - 100% 正確 (大字體打卡拍照設計) -->
+    <div id="success-page" class="page">
+      <div class="photo-certificate">
+        <h2>
+          <span class="animated-emoji anim-bounce">🎉</span>
+          恭喜您答對晒！
+          <span class="animated-emoji anim-bounce">👏</span>
+        </h2>
+        <div class="cert-text">
+          <span class="animated-emoji anim-pulse">✅</span> 我已經參與<br>AI 社區推廣活動
+        </div>
+        <div class="date-text" id="today-date">日期：</div>
+      </div>
+      <!-- 點擊後跳回首頁重新開始 -->
+      <button class="btn" style="margin-top: 1vh; margin-bottom: 0;" onclick="goToHome()">
+        <span class="animated-emoji anim-float">🔄</span> 完成 / 返主頁
+      </button>
+    </div>
+
+    <!-- 4. 結果頁面 - 未滿 100% 正確 -->
+    <div id="retry-page" class="page">
+      <h1 style="margin-top: auto;">
+        <span class="animated-emoji anim-wiggle">💪</span>
+        加油！仲差少少咋！
+      </h1>
+      <p>想唔想再一次認識 AI 社區推廣活動嘅內容？<span class="animated-emoji anim-float">💡</span></p>
+      <!-- 點擊後跳回首頁重新開始 -->
+      <button class="btn btn-retry" onclick="goToHome()">
+        <span class="animated-emoji anim-bounce">📖</span> 再一次認識
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 原始題庫資料 (10 題廣東話)
+    const masterQuestionBank = [
+      {
+        q: "用 AI 嗰陣，下面邊種資料係「絕對唔可以」輸入？",
+        icon: "🔒",
+        options: ["身分證號碼或者密碼 🆔", "公開嘅社區通告 📢", "普通嘅打招呼問候語 👋"],
+        correct: 0
+      },
+      {
+        q: "為咗保障個人私隱，我哋應該拒絕向 AI 提供邊種資料？",
+        icon: "🛡️",
+        options: ["醫療或者財務紀錄 🏥", "食譜煮法 🍳", "天氣預報資料 ☀️"],
+        correct: 0
+      },
+      {
+        q: "點解輸入畀 AI 嘅對話內容要咁小心？",
+        icon: "⚠️",
+        options: ["因為可能會被系統收集拎去訓練模型 💾", "因為系統會自動幫你 Send 畀親戚朋友 📲", "因為會令到部手機即刻死機 💥"],
+        correct: 0
+      },
+      {
+        q: "返工用 AI 嗰陣，對於公司嘅機密或者客戶資料應該點處理？",
+        icon: "💼",
+        options: ["千祈唔好傳畀 AI，要保守商業機密 🤫", "全部 Upload 讓 AI 自動歸檔 📁", "分享畀其他同事一齊輸入 👥"],
+        correct: 0
+      },
+      {
+        q: "關於 AI 俾出嚟嘅答案，下面邊句說話先至正確？",
+        icon: "🧐",
+        options: ["AI 有時會吹水或者俾出過時、錯嘅答案 ❌", "AI 永遠唔會錯，可以完全信晒佢 💯", "AI 只會顯示教科書上面嘅標準答案 📖"],
+        correct: 0
+      },
+      {
+        q: "當你需要用 AI 提供嘅重要數據或者學術資料，應該點做？",
+        icon: "🔎",
+        options: ["親自去官方網站或者文獻比對核實 🌐", "照抄當真，直接發佈出去 📝", "即刻 Share 畀朋友睇 📲"],
+        correct: 0
+      },
+      {
+        q: "用 AI 科技嗰陣，我哋應該抱住點樣嘅思考態度？",
+        icon: "🧠",
+        options: ["保持獨立思考，當 AI 係輔助工具 🛠️", "由得部機器替自己個腦思考 🤖", "盲目聽晒 AI 嘅所有建議 👂"],
+        correct: 0
+      },
+      {
+        q: "用 AI 生成嘅圖文或者程式碼，要特別留意啲咩？",
+        icon: "🎨",
+        options: ["留意商業授權同版權歸屬 📜", "完全唔洗理會版權問題 🙈", "只要 Download 到就可以隨便賣畀人 💰"],
+        correct: 0
+      },
+      {
+        q: "公開發表嘅內容如果有 AI 協助完成，應該點樣處理？",
+        icon: "📢",
+        options: ["清楚標明出處，避免假裝係自己原創 ✍️", "隱瞞事實，話係自己一手一腳做 🙈", "唔洗做任何說明 🤐"],
+        correct: 0
+      },
+      {
+        q: "對於 AI 回答嘅內容，我哋應該抱住咩心態？",
+        icon: "❓",
+        options: ["保持懷疑，去多個地方查證來源 🔍", "直接 Copy，省時又省力 📋", "當佢係唯一嘅真理 👑"],
+        correct: 0
+      }
+    ];
+
+    let selectedQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    // 返回首頁（確保每一局都先由“開始測驗”為首頁）
+    function goToHome() {
+      showPage('landing-page');
+    }
+
+    // 從首頁點擊“開始測試”後觸發
+    function startQuiz() {
+      score = 0;
+      currentQuestionIndex = 0;
+      
+      // 隨機抽 5 題
+      const shuffledBank = [...masterQuestionBank].sort(() => 0.5 - Math.random());
+      const rawFive = shuffledBank.slice(0, 5);
+
+      // 每題抽 1 對 1 錯（共 2 個選項）
+      selectedQuestions = rawFive.map(item => {
+        const correctAnswer = item.options[item.correct];
+        const wrongAnswers = item.options.filter((_, idx) => idx !== item.correct);
+        const randomWrongAnswer = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
+        
+        const twoOptions = [correctAnswer, randomWrongAnswer].sort(() => 0.5 - Math.random());
+        const newCorrectIndex = twoOptions.indexOf(correctAnswer);
+
+        return {
+          q: item.q,
+          icon: item.icon,
+          options: twoOptions,
+          correct: newCorrectIndex
+        };
+      });
+
+      showPage('quiz-page');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const qData = selectedQuestions[currentQuestionIndex];
+      document.getElementById('progress-text').innerHTML = `
+        <span class="animated-emoji anim-pulse">📝</span> 第 ${currentQuestionIndex + 1} / 5 題
+      `;
+      
+      document.getElementById('question-text').innerHTML = `
+        <span class="animated-emoji anim-bounce">${qData.icon}</span>
+        <span>${qData.q}</span>
+      `;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      qData.options.forEach((optText, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <span class="animated-emoji anim-float">${index === 0 ? '🅰️' : '🅱️'}</span>
+          <span>${optText}</span>
+        `;
+        btn.onclick = () => selectAnswer(index);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selectedIndex) {
+      if (selectedIndex === selectedQuestions[currentQuestionIndex].correct) {
+        score++;
+      }
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < selectedQuestions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      if (score === 5) {
+        // 100% 正確
+        const today = new Date();
+        const dateString = `${today.getFullYear()} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`;
+        document.getElementById('today-date').innerHTML = `
+          <span class="animated-emoji anim-wiggle">📅</span> 日期：${dateString}
+        `;
+        showPage('success-page');
+      } else {
+        // 未滿 100%
+        showPage('retry-page');
+      }
+    }
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
