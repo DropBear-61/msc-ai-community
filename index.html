@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AI 社區推廣活動 - 認知小測試</title>
+  <title>AI Community Quiz / AI 社區推廣活動認知測試</title>
+  <!-- 引入輕量級 QR Code 產生庫 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
       --primary-color: #005bb5;
@@ -43,7 +45,7 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.12);
       width: 100%;
       max-width: 800px;
-      height: 94vh;
+      height: 96vh;
       max-height: 900px;
       padding: 3vh 3vw;
       display: flex;
@@ -59,8 +61,9 @@
       width: 100%;
       height: 100%;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
+      gap: 2vh;
     }
 
     .page.active {
@@ -103,16 +106,21 @@
     /* 基本字體與按鈕排版 */
     h1 {
       color: var(--primary-color);
-      font-size: clamp(1.8rem, 4vh, 2.8rem);
+      font-size: clamp(1.6rem, 3.8vh, 2.6rem);
       line-height: 1.3;
-      margin-top: auto;
     }
 
     p {
-      font-size: clamp(1.2rem, 2.8vh, 1.8rem);
+      font-size: clamp(1.1rem, 2.5vh, 1.6rem);
       color: #444;
       line-height: 1.5;
-      margin: 2vh 0;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5vh;
+      width: 100%;
     }
 
     .btn {
@@ -120,18 +128,18 @@
       color: white;
       border: none;
       border-radius: 20px;
-      padding: clamp(15px, 2.5vh, 25px) clamp(30px, 4vw, 50px);
-      font-size: clamp(1.3rem, 3vh, 2rem);
+      padding: clamp(12px, 2vh, 18px) clamp(20px, 3vw, 40px);
+      font-size: clamp(1.2rem, 2.6vh, 1.7rem);
       font-weight: bold;
       cursor: pointer;
       width: 100%;
-      margin-bottom: auto;
       transition: background-color 0.2s, transform 0.1s;
       box-shadow: 0 6px 15px rgba(0,136,255,0.3);
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 10px;
+      flex-shrink: 0;
     }
 
     .btn:active {
@@ -149,11 +157,10 @@
       font-size: clamp(1.1rem, 2.5vh, 1.5rem);
       color: var(--primary-color);
       font-weight: bold;
-      margin-top: 1vh;
     }
 
     .question-box {
-      font-size: clamp(1.3rem, 3.2vh, 2.1rem);
+      font-size: clamp(1.2rem, 3vh, 1.9rem);
       font-weight: bold;
       text-align: left;
       background: #eef6ff;
@@ -162,7 +169,6 @@
       border-left: 10px solid var(--secondary-color);
       line-height: 1.4;
       width: 100%;
-      margin: 2vh 0;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -173,7 +179,6 @@
       flex-direction: column;
       gap: 2vh;
       width: 100%;
-      margin-bottom: auto;
     }
 
     .option-btn {
@@ -181,8 +186,8 @@
       color: #333;
       border: 4px solid #dcdfe6;
       border-radius: 18px;
-      padding: clamp(15px, 2.5vh, 24px) 20px;
-      font-size: clamp(1.2rem, 2.8vh, 1.7rem);
+      padding: clamp(14px, 2.2vh, 22px) 20px;
+      font-size: clamp(1.1rem, 2.5vh, 1.6rem);
       font-weight: 600;
       text-align: left;
       cursor: pointer;
@@ -198,43 +203,74 @@
       background-color: #e6f3ff;
     }
 
-    /* --- 100% 正確：打卡專用全螢幕大卡片設計 --- */
-    .photo-certificate {
-      border: 8px dashed var(--correct-color);
-      padding: 4vh 3vw;
-      border-radius: 24px;
-      background-color: #f1f8e9;
+    /* --- 上下左右置中及填滿：結果卡片容器 --- */
+    .result-card {
       width: 100%;
-      height: 80%; /* 佔據絕大部分空間，方便持裝置拍照 */
+      flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-evenly;
       align-items: center;
-      gap: 2vh;
+      border-radius: 24px;
+      padding: 2.5vh 3vw;
+      box-sizing: border-box;
+    }
+
+    /* 100% 正確卡片 */
+    .photo-certificate {
+      border: 8px dashed var(--correct-color);
+      background-color: #f1f8e9;
       box-shadow: inset 0 0 20px rgba(46,125,50,0.1);
-      margin-top: 1vh;
     }
 
     .photo-certificate h2 {
       color: var(--correct-color);
-      font-size: clamp(2.2rem, 5vh, 3.5rem);
+      font-size: clamp(1.8rem, 3.8vh, 2.8rem);
       line-height: 1.2;
     }
 
     .photo-certificate .cert-text {
-      font-size: clamp(1.8rem, 4vh, 2.8rem);
+      font-size: clamp(1.3rem, 3vh, 2.1rem);
       font-weight: 800;
       color: var(--primary-color);
       background-color: #ffffff;
-      padding: 2vh 3vw;
+      padding: 1.5vh 3vw;
       border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       width: 100%;
-      line-height: 1.4;
+      line-height: 1.3;
+    }
+
+    /* 未滿 100% 卡片 */
+    .retry-card {
+      border: 6px dashed var(--accent-color);
+      background-color: #fffde7;
+    }
+
+    /* QR Code 容器與樣式 */
+    .qrcode-box {
+      background: #ffffff;
+      padding: 12px 16px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .qrcode-box img, .qrcode-box canvas {
+      display: block;
+    }
+
+    .qrcode-label {
+      font-size: clamp(0.85rem, 1.7vh, 1.1rem);
+      color: #555;
+      font-weight: bold;
     }
 
     .photo-certificate .date-text {
-      font-size: clamp(1.3rem, 3vh, 2rem);
+      font-size: clamp(1rem, 2.2vh, 1.5rem);
       font-weight: bold;
       color: #333;
     }
@@ -243,68 +279,95 @@
 <body>
 
   <div class="container">
-    <!-- 1. Landing Page (首頁) -->
-    <div id="landing-page" class="page active">
-      <h1>
+    <!-- 1. Landing Page (首頁：支援中/英文按鈕選擇) -->
+    <div id="landing-page" class="page active" style="justify-content: space-between;">
+      <h1 style="margin-top: auto;">
         <span class="animated-emoji anim-bounce">🤖</span>
-        AI 社區推廣活動
+        AI Community Promotion
         <span class="animated-emoji anim-bounce">✨</span>
-        <br>認知小測試
+        <br>AI 社區推廣活動測試
       </h1>
       <p>
-        歡迎參加！請按下面個掣開始答題<span class="animated-emoji anim-wiggle">👇</span><br>
-        睇下您對用 AI 嘅觀念了解幾多啦！
+        Welcome! Please select your language to start.<span class="animated-emoji anim-wiggle">👇</span><br>
+        歡迎參加！請選擇語言開始測試。
       </p>
-      <button class="btn" onclick="startQuiz()">
-        <span class="animated-emoji anim-pulse">🚀</span> 開始測試
-      </button>
+      
+      <div class="btn-group" style="margin-bottom: auto;">
+        <button class="btn" onclick="startQuiz('zh')">
+          <span class="animated-emoji anim-pulse">🇲🇴</span> 開始測試 
+        </button>
+        <button class="btn" style="background-color: #2b5797;" onclick="startQuiz('en')">
+          <span class="animated-emoji anim-pulse">🇬🇧</span> Start Quiz 
+        </button>
+      </div>
     </div>
 
     <!-- 2. 答題頁面 -->
-    <div id="quiz-page" class="page">
-      <div class="progress" id="progress-text">第 1 / 5 題</div>
-      <div class="question-box" id="question-text">題目載入中...</div>
+    <div id="quiz-page" class="page" style="justify-content: space-between;">
+      <div class="progress" id="progress-text">Question 1 / 5</div>
+      <div class="question-box" id="question-text">Loading...</div>
       <div class="options-container" id="options-container">
         <!-- 選項動態生成 -->
       </div>
     </div>
 
-    <!-- 3. 結果頁面 - 100% 正確 (大字體打卡拍照設計) -->
+    <!-- 3. 結果頁面 - 100% 正確 -->
     <div id="success-page" class="page">
-      <div class="photo-certificate">
-        <h2>
+      <div class="result-card photo-certificate">
+        <h2 id="success-title">
           <span class="animated-emoji anim-bounce">🎉</span>
-          恭喜您答對晒！
+          Congratulations!
           <span class="animated-emoji anim-bounce">👏</span>
         </h2>
-        <div class="cert-text">
-          <span class="animated-emoji anim-pulse">✅</span> 我已經參與<br>AI 社區推廣活動
+        
+        <div class="cert-text" id="success-cert-text">
+          <span class="animated-emoji anim-pulse">✅</span> I have participated in<br>AI Community Event
         </div>
-        <div class="date-text" id="today-date">日期：</div>
+
+        <!-- QR Code 顯示區域 -->
+        <div class="qrcode-box">
+          <div id="qrcode-success"></div>
+          <div class="qrcode-label" id="qr-label-success">Scan for more event info 📲</div>
+        </div>
+
+        <div class="date-text" id="today-date">Date: </div>
       </div>
-      <!-- 點擊後跳回首頁重新開始 -->
-      <button class="btn" style="margin-top: 1vh; margin-bottom: 0;" onclick="goToHome()">
-        <span class="animated-emoji anim-float">🔄</span> 完成 / 返主頁
+
+      <!-- 完成按鈕 -->
+      <button class="btn" id="btn-success-home" onclick="goToHome()">
+        <span class="animated-emoji anim-float">🔄</span> Home / 返主頁
       </button>
     </div>
 
     <!-- 4. 結果頁面 - 未滿 100% 正確 -->
     <div id="retry-page" class="page">
-      <h1 style="margin-top: auto;">
-        <span class="animated-emoji anim-wiggle">💪</span>
-        加油！仲差少少咋！
-      </h1>
-      <p>想唔想再一次認識 AI 社區推廣活動嘅內容？<span class="animated-emoji anim-float">💡</span></p>
-      <!-- 點擊後跳回首頁重新開始 -->
-      <button class="btn btn-retry" onclick="goToHome()">
-        <span class="animated-emoji anim-bounce">📖</span> 再一次認識
+      <div class="result-card retry-card">
+        <h1 id="retry-title">
+          <span class="animated-emoji anim-wiggle">💪</span>
+          Keep Going! Almost There!
+        </h1>
+        
+        <p style="margin: 0;" id="retry-desc">Want to learn more about the AI Community Event? <span class="animated-emoji anim-float">💡</span></p>
+
+        <!-- QR Code 顯示區域 -->
+        <div class="qrcode-box">
+          <div id="qrcode-retry"></div>
+          <div class="qrcode-label" id="qr-label-retry">Scan for more event info 📲</div>
+        </div>
+      </div>
+
+      <!-- 再試按鈕 -->
+      <button class="btn btn-retry" id="btn-retry-home" onclick="goToHome()">
+        <span class="animated-emoji anim-bounce">📖</span> Learn More / 再一次認識
       </button>
     </div>
   </div>
 
   <script>
-    // 原始題庫資料 (10 題廣東話)
-    const masterQuestionBank = [
+    const targetUrl = "https://www.msc.org.mo/zh/activity-detail/41/b3310df776ae8df0021c1be7517db4f3";
+
+    // 1. 中文題庫
+    const masterQuestionBankZH = [
       {
         q: "用 AI 嗰陣，下面邊種資料係「絕對唔可以」輸入？",
         icon: "🔒",
@@ -367,25 +430,115 @@
       }
     ];
 
+    // 2. 英文題庫 (內容與中文一致)
+    const masterQuestionBankEN = [
+      {
+        q: "Which type of information must NEVER be entered into AI?",
+        icon: "🔒",
+        options: ["ID numbers or passwords 🆔", "Public community notices 📢", "General greetings 👋"],
+        correct: 0
+      },
+      {
+        q: "To protect personal privacy, which data should we refuse to provide to AI?",
+        icon: "🛡️",
+        options: ["Medical or financial records 🏥", "Cooking recipes 🍳", "Weather forecast information ☀️"],
+        correct: 0
+      },
+      {
+        q: "Why must we be careful about the prompts entered into AI?",
+        icon: "⚠️",
+        options: ["Data may be collected for model training 💾", "AI will auto-send messages to friends 📲", "It will cause the smartphone to crash 💥"],
+        correct: 0
+      },
+      {
+        q: "How should company secrets or customer data be handled at work?",
+        icon: "💼",
+        options: ["Never share with AI to protect trade secrets 🤫", "Upload all data for automatic filing 📁", "Share with colleagues to input together 👥"],
+        correct: 0
+      },
+      {
+        q: "Which statement about AI-generated answers is TRUE?",
+        icon: "🧐",
+        options: ["AI may hallucinate or give inaccurate answers ❌", "AI is never wrong and fully trustworthy 💯", "AI only displays textbook standard answers 📖"],
+        correct: 0
+      },
+      {
+        q: "What should you do when using AI for crucial data or research?",
+        icon: "🔎",
+        options: ["Verify with official sources and literature 🌐", "Copy directly and publish immediately 📝", "Share with friends instantly 📲"],
+        correct: 0
+      },
+      {
+        q: "What mindset should we maintain when using AI technology?",
+        icon: "🧠",
+        options: ["Think critically and treat AI as an assistant 🛠️", "Let machines do all the thinking 🤖", "Blindly follow all AI recommendations 👂"],
+        correct: 0
+      },
+      {
+        q: "What should you pay attention to regarding AI-generated images or code?",
+        icon: "🎨",
+        options: ["Pay attention to copyright and commercial rights 📜", "Completely ignore copyright issues 🙈", "Sell it freely once downloaded 💰"],
+        correct: 0
+      },
+      {
+        q: "How should public work created with AI assistance be handled?",
+        icon: "📢",
+        options: ["Clearly state the source and avoid pretending it's original ✍️", "Conceal the fact and claim full original work 🙈", "No explanation needed 🤐"],
+        correct: 0
+      },
+      {
+        q: "What attitude should we hold toward AI responses?",
+        icon: "❓",
+        options: ["Stay skeptical and cross-check multiple sources 🔍", "Copy directly to save time and effort 📋", "Treat it as the absolute truth 👑"],
+        correct: 0
+      }
+    ];
+
+    // UI 語系文字對照
+    const i18n = {
+      zh: {
+        progress: (curr, total) => `<span class="animated-emoji anim-pulse">📝</span> 第 ${curr} / ${total} 題`,
+        successTitle: `<span class="animated-emoji anim-bounce">🎉</span> 恭喜您答對晒！ <span class="animated-emoji anim-bounce">👏</span>`,
+        successCert: `<span class="animated-emoji anim-pulse">✅</span> 我已經參與<br>AI 社區推廣活動`,
+        qrLabel: "掃描了解更多活動詳情 📲",
+        datePrefix: "日期：",
+        btnHome: `<span class="animated-emoji anim-float">🔄</span> 完成 / 返主頁`,
+        retryTitle: `<span class="animated-emoji anim-wiggle">💪</span> 加油！仲差少少咋！`,
+        retryDesc: `想唔想再一次認識 AI 社區推廣活動嘅內容？<span class="animated-emoji anim-float">💡</span>`,
+        btnRetry: `<span class="animated-emoji anim-bounce">📖</span> 再一次認識`
+      },
+      en: {
+        progress: (curr, total) => `<span class="animated-emoji anim-pulse">📝</span> Question ${curr} / ${total}`,
+        successTitle: `<span class="animated-emoji anim-bounce">🎉</span> Congratulations! <span class="animated-emoji anim-bounce">👏</span>`,
+        successCert: `<span class="animated-emoji anim-pulse">✅</span> I have participated in<br>AI Community Event`,
+        qrLabel: "Scan for event details 📲",
+        datePrefix: "Date: ",
+        btnHome: `<span class="animated-emoji anim-float">🔄</span> Complete / Home`,
+        retryTitle: `<span class="animated-emoji anim-wiggle">💪</span> Keep Going! Almost There!`,
+        retryDesc: `Want to learn more about AI Community Event? <span class="animated-emoji anim-float">💡</span>`,
+        btnRetry: `<span class="animated-emoji anim-bounce">📖</span> Learn Again`
+      }
+    };
+
+    let currentLang = 'zh';
     let selectedQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
 
-    // 返回首頁（確保每一局都先由“開始測驗”為首頁）
     function goToHome() {
       showPage('landing-page');
     }
 
-    // 從首頁點擊“開始測試”後觸發
-    function startQuiz() {
+    // 開始測驗（接收 'zh' 或 'en'）
+    function startQuiz(lang) {
+      currentLang = lang;
       score = 0;
       currentQuestionIndex = 0;
       
-      // 隨機抽 5 題
-      const shuffledBank = [...masterQuestionBank].sort(() => 0.5 - Math.random());
+      const bank = currentLang === 'zh' ? masterQuestionBankZH : masterQuestionBankEN;
+      const shuffledBank = [...bank].sort(() => 0.5 - Math.random());
       const rawFive = shuffledBank.slice(0, 5);
 
-      // 每題抽 1 對 1 錯（共 2 個選項）
       selectedQuestions = rawFive.map(item => {
         const correctAnswer = item.options[item.correct];
         const wrongAnswers = item.options.filter((_, idx) => idx !== item.correct);
@@ -408,9 +561,7 @@
 
     function loadQuestion() {
       const qData = selectedQuestions[currentQuestionIndex];
-      document.getElementById('progress-text').innerHTML = `
-        <span class="animated-emoji anim-pulse">📝</span> 第 ${currentQuestionIndex + 1} / 5 題
-      `;
+      document.getElementById('progress-text').innerHTML = i18n[currentLang].progress(currentQuestionIndex + 1, 5);
       
       document.getElementById('question-text').innerHTML = `
         <span class="animated-emoji anim-bounce">${qData.icon}</span>
@@ -445,17 +596,48 @@
       }
     }
 
+    function renderQRCode(elementId) {
+      const qrContainer = document.getElementById(elementId);
+      qrContainer.innerHTML = "";
+      
+      const qrSize = Math.min(window.innerHeight * 0.16, 130);
+      
+      new QRCode(qrContainer, {
+        text: targetUrl,
+        width: qrSize,
+        height: qrSize,
+        colorDark : "#005bb5",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      });
+    }
+
     function showResult() {
+      const texts = i18n[currentLang];
+
       if (score === 5) {
         // 100% 正確
         const today = new Date();
-        const dateString = `${today.getFullYear()} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`;
-        document.getElementById('today-date').innerHTML = `
-          <span class="animated-emoji anim-wiggle">📅</span> 日期：${dateString}
-        `;
+        const dateString = currentLang === 'zh' 
+          ? `${today.getFullYear()} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`
+          : `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+
+        document.getElementById('success-title').innerHTML = texts.successTitle;
+        document.getElementById('success-cert-text').innerHTML = texts.successCert;
+        document.getElementById('qr-label-success').innerText = texts.qrLabel;
+        document.getElementById('today-date').innerHTML = `<span class="animated-emoji anim-wiggle">📅</span> ${texts.datePrefix}${dateString}`;
+        document.getElementById('btn-success-home').innerHTML = texts.btnHome;
+
+        renderQRCode("qrcode-success");
         showPage('success-page');
       } else {
-        // 未滿 100%
+        // 未滿 100% 正確
+        document.getElementById('retry-title').innerHTML = texts.retryTitle;
+        document.getElementById('retry-desc').innerHTML = texts.retryDesc;
+        document.getElementById('qr-label-retry').innerText = texts.qrLabel;
+        document.getElementById('btn-retry-home').innerHTML = texts.btnRetry;
+
+        renderQRCode("qrcode-retry");
         showPage('retry-page');
       }
     }
